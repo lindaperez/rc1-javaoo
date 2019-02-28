@@ -1,6 +1,7 @@
 package module4;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
@@ -20,8 +21,8 @@ import processing.core.PApplet;
 /** EarthquakeCityMap
  * An application with an interactive map displaying earthquake data.
  * Author: UC San Diego Intermediate Software Development MOOC team
- * @author Your name here
- * Date: July 17, 2015
+ * @author Linda Perez
+ * Date: Febrary 27, 2019
  * */
 public class EarthquakeCityMap extends PApplet {
 	
@@ -77,7 +78,7 @@ public class EarthquakeCityMap extends PApplet {
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
 		//earthquakesURL = "test1.atom";
-		//earthquakesURL = "test2.atom";
+		earthquakesURL = "test2.atom";
 		
 		// WHEN TAKING THIS QUIZ: Uncomment the next line
 		//earthquakesURL = "quiz1.atom";
@@ -127,11 +128,15 @@ public class EarthquakeCityMap extends PApplet {
 		map.draw();
 		addKey();
 		
-	}
-	
+	}	
 	// helper method to draw key in GUI
 	// TODO: Update this method as appropriate
 	private void addKey() {	
+		int purple = color(186,85,211);
+		int white = color(255,255,255);
+		int red = color(255, 0, 0);
+		int yellow = color(255, 255, 0);
+		int blue = color(0, 0, 255);
 		// Remember you can use Processing's graphics methods here
 		fill(255, 250, 240);
 		rect(25, 50, 150, 250);
@@ -140,18 +145,39 @@ public class EarthquakeCityMap extends PApplet {
 		textAlign(LEFT, CENTER);
 		textSize(12);
 		text("Earthquake Key", 50, 75);
+		//triangel
+		fill(purple);
+	    triangle(45, 100+30, 51, 100+18, 57, 100+30);
+	    //circle
+	    fill(white);
+		ellipse(50, 145, 10, 10);
+		//square
+		fill(white);
+		rect(45, 165, 10,10);
+		//yellow circle
+	    fill(yellow);
+		ellipse(50, 225, 10, 10);
+	
+		fill(blue);
+		ellipse(50, 245, 10, 10);
 		
-		fill(color(255, 0, 0));
-		ellipse(50, 125, 15, 15);
-		fill(color(255, 255, 0));
-		ellipse(50, 175, 10, 10);
-		fill(color(0, 0, 255));
-		ellipse(50, 225, 5, 5);
+		fill(red);
+		ellipse(50, 265, 10, 10);
+		
+		fill(white);
+		ellipse(50, 285, 10, 10);
+		line(45, 280, 45+10, 280+10);
+		line(45+10, 280, 45, 280+10);
 		
 		fill(0, 0, 0);
-		text("5.0+ Magnitude", 75, 125);
-		text("4.0+ Magnitude", 75, 175);
-		text("Below 4.0", 75, 225);
+		text("City Marker", 75, 125);
+		text("Land Quake", 75, 145);
+		text("Ocean Quake", 75, 165);
+		text("Size ~ Magnitude", 45, 195);
+		text("Shallow", 75, 225);
+		text("Intermediate", 75,245 );
+		text("Deep", 75, 265);
+		text("Past Day", 75, 285);
 	}
 
 	
@@ -170,7 +196,9 @@ public class EarthquakeCityMap extends PApplet {
 		// If isInCountry ever returns true, isLand should return true.
 		for (Marker m : countryMarkers) {
 			// TODO: Finish this method using the helper method isInCountry
-			
+			if(isInCountry(earthquake, m)){
+				return true;
+			}
 		}
 		
 		
@@ -197,6 +225,27 @@ public class EarthquakeCityMap extends PApplet {
 		//     	and (2) if it is on land, that its country property matches 
 		//      the name property of the country marker.   If so, increment
 		//      the country's counter.
+		HashMap<String, Integer> hm = new HashMap<>(); 
+			for(Marker qm : quakeMarkers){
+				 String name ="";
+				 if(qm instanceof LandQuakeMarker){
+						name = ((LandQuakeMarker)qm).getCountry();
+				 }else if(qm instanceof OceanQuakeMarker){
+					 name = "OCEAN QUAKES";
+				 }
+
+				if(hm.containsKey(name)){
+					int q= hm.get(name);
+					hm.replace(name, ++q);
+				}else{
+					hm.put(name, 1);
+				}
+			}
+			
+		for(String c: hm.keySet()){
+			System.out.println(c+": "+hm.get(c));
+		}
+		
 		
 		// Here is some code you will find useful:
 		// 

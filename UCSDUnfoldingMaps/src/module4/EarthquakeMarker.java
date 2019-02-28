@@ -68,12 +68,20 @@ public abstract class EarthquakeMarker extends SimplePointMarker
 		drawEarthquake(pg, x, y);
 		
 		// OPTIONAL TODO: draw X over marker if within past day		
-		
+		crossSignal(pg,x,y);
 		// reset to previous styling
 		pg.popStyle();
 		
 	}
 	
+	private void crossSignal(PGraphics pg, float x, float y) {
+		
+		String age = properties.get("age").toString();
+		if(age.equals("Past Day")){
+			pg.line(x, y, x+10, y+10);
+			pg.line(x+10, y, x, y+10);
+		}
+	}
 	// determine color of marker from depth, and set pg's fill color 
 	// using the pg.fill method.
 	// We suggest: Deep = red, intermediate = blue, shallow = yellow
@@ -81,6 +89,28 @@ public abstract class EarthquakeMarker extends SimplePointMarker
 	// You might find the getters below helpful.
 	private void colorDetermine(PGraphics pg) {
 		//TODO: Implement this method
+		
+		/*“Shallow earthquakes are between 0 and 70 km deep;
+		 *  intermediate earthquakes, 70 - 300 km deep; and deep earthquakes,
+		 *  300 - 700 km deep. In general, the term "deep-focus earthquakes"
+		 *  is applied to earthquakes deeper than 70 km. All earthquakes 
+		 *  deeper than 70 km are localized within great slabs of shallow
+		 *  lithosphere that are sinking into the Earth's mantle.”
+		 */
+
+		
+		float depth = this.getDepth();
+
+		if(depth>=0.0 && depth<70.0){
+		//shallow	
+			pg.fill(255, 255, 0);
+		}else if(depth>=70.0 && depth<300.0){
+			//intermediate
+			pg.fill(0, 0, 255);
+		}else if(depth>=300.0 && depth<=700.0){
+			//deep
+			pg.fill(255, 0, 0);
+		}
 	}
 	
 	

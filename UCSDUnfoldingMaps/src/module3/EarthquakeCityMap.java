@@ -55,11 +55,11 @@ public class EarthquakeCityMap extends PApplet {
 		size(950, 600, OPENGL);
 
 		if (offline) {
-		    map = new UnfoldingMap(this, 200, 50, 700, 500, new MBTilesMapProvider(mbTilesString));
+		    map = new UnfoldingMap(this, 200, 50, 700, 500, new Google.GoogleTerrainProvider());
 		    earthquakesURL = "2.5_week.atom"; 	// Same feed, saved Aug 7, 2015, for working offline
 		}
 		else {
-			map = new UnfoldingMap(this, 200, 50, 700, 500, new Yahoo.RoadProvider());
+			map = new UnfoldingMap(this, 200, 50, 700, 500, new Google.GoogleMapProvider());
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 			//earthquakesURL = "2.5_week.atom";
 		}
@@ -183,21 +183,27 @@ public class EarthquakeCityMap extends PApplet {
 	    int blue = color(0, 0, 255);
 	    int black = color(0,0,0);
 	    int white = color(250,250,250);
+	    int purple = color(186,85,211);
+	    int x=50, y=75;
 		fill(255, 253, 238);
 		rect(30, 20, 150, 200, 7);
 		fill(0,0,0);
 		textSize(12);
-		text("Earthquake Key",55, 40); 
-		text("5.0 + Magnitude", 70, 80);
-		text("4.0 + Magnitude", 70, 120);
-		text("Below 4.0", 70, 160);
-
+		text("Earthquake Key",x+5, 40); 
+		//text("City Marker", x+20, y+5);
+		text("5.0 + Magnitude", x+20, y+45);
+		text("4.0 + Magnitude", x+20, y+85);
+		text("Below 4.0", x+20, y+125);
+		
+		//fill(purple);
+		//triangle(x, y, 58, 20, 86, 75);
+		
 		fill(red);
-		ellipse(50, 75, 15, 15);
+		ellipse(x, y+40, 15, 15);
 		fill(yellow);
-		ellipse(50, 115, 10, 11);
+		ellipse(x, y+80, 10, 11);
 		fill(blue);
-		ellipse(50, 155, 8, 8);
+		ellipse(x, y+120, 8, 8);
 			
 	}
 }

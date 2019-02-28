@@ -6,6 +6,7 @@ import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.marker.SimplePointMarker;
 import processing.core.PGraphics;
 
+
 /** Implements a visual marker for cities on an earthquake map
  * 
  * @author UC San Diego Intermediate Software Development MOOC team
@@ -45,8 +46,11 @@ public class CityMarker extends SimplePointMarker {
 		// e.g. pg.rect(x, y, 10, 10) will draw a 10x10 square
 		// whose upper left corner is at position x, y
 		// Check out the processing documentation for more methods
+		int purple = pg.color(186,85,211);
+		pg.fill(purple);
 		
-		
+
+	    pg.triangle(x, y, x+6, y-12, x+12, y);
 		// Restore previous drawing style
 		pg.popStyle();
 	}
