@@ -20,7 +20,7 @@ import processing.core.PApplet;
 /** EarthquakeCityMap
  * An application with an interactive map displaying earthquake data.
  * Author: UC San Diego Intermediate Software Development MOOC team
- * @author Your name here
+ * @author Linda Perez
  * Date: July 17, 2015
  * */
 public class EarthquakeCityMap extends PApplet {
@@ -145,7 +145,21 @@ public class EarthquakeCityMap extends PApplet {
 	// 
 	private void selectMarkerIfHover(List<Marker> markers)
 	{
+		if( lastSelected !=null ){
+			return;
+		}
 		// TODO: Implement this method
+	
+		for(Marker m : markers){
+			CommonMarker marker = (CommonMarker) m;
+			if (marker.isInside(map, mouseX, mouseY)){
+				lastSelected = marker;
+				marker.setSelected(true);
+				return;
+			}
+		}
+		
+		
 	}
 	
 	/** The event handler for mouse clicks
@@ -159,17 +173,65 @@ public class EarthquakeCityMap extends PApplet {
 		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
+		if(this.lastClicked!=null){
+			hideMarkers(false);
+			lastClicked =null;
+			return;
+		}else{
+			List<Marker> cityRadioMarkers;
+			for(Marker m:quakeMarkers){
+				CommonMarker c = (CommonMarker)m; 
+				if(c.isSelected()){
+					if(m instanceof EarthquakeMarker ){
+			
+						cityRadioMarkers=showCities((EarthquakeMarker)m);
+						lastClicked= (CommonMarker) m;
+						m.setHidden(false);
+						return;
+					}
+					if(m instanceof OceanQuakeMarker){
+					//	((OceanQuakeMarker)o).drawLines(cityRadioMarkers);				
+					}
+					
+				}
+			}
+			
+		}
 	}
 	
+
+//	private List<Marker> drawLines(Markers m) {
+		
+	//}
 	
-	// loop over and unhide all markers
-	private void unhideMarkers() {
+	private List<Marker> showCities(EarthquakeMarker e) {
+		List<Marker> l = new ArrayList<Marker>(); 
+		double radious = e.threatCircle();
 		for(Marker marker : quakeMarkers) {
-			marker.setHidden(false);
+			marker.setHidden(true);
 		}
 			
 		for(Marker marker : cityMarkers) {
-			marker.setHidden(false);
+		   CityMarker c = (CityMarker) marker;
+		   double d = e.getDistanceTo(c.getLocation());
+			
+			if(d<=radious){
+				marker.setHidden(false);
+				l.add(marker);
+			}else{
+				marker.setHidden(true);
+			}
+		}
+		return l;
+	}
+	// loop over and unhide all markers
+	private void hideMarkers(boolean hide) {
+		for(Marker marker : quakeMarkers) {
+			marker.setHidden(hide);
+		}
+			
+		for(Marker marker : cityMarkers) {
+			marker.setHidden(hide);
 		}
 	}
 	

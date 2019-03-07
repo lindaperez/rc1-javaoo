@@ -1,12 +1,14 @@
 package module5;
 
+import java.text.DecimalFormat;
+
 import de.fhpotsdam.unfolding.data.PointFeature;
 import processing.core.PGraphics;
 
 /** Implements a visual marker for earthquakes on an earthquake map
  * 
  * @author UC San Diego Intermediate Software Development MOOC team
- * @author Your name here
+ * @author Linda
  *
  */
 public abstract class EarthquakeMarker extends CommonMarker
@@ -93,7 +95,21 @@ public abstract class EarthquakeMarker extends CommonMarker
 	@Override
 	public void showTitle(PGraphics pg, float x, float y)
 	{
+
+			// TODO: Implement this method
+			String title = this.getTitle();
+			float depth = this.getDepth();
+			float magnitude = this.getMagnitude();
+			float radious = this.getRadius();
 		// TODO: Implement this method
+		
+			
+		pg.fill(255, 250, 240);
+		pg.rect(x, y, 280, 35);
+		pg.textSize(12);
+		pg.fill(0, 0, 0);
+		pg.text(title, x+10, y+15);
+
 		
 	}
 
