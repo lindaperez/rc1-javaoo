@@ -171,7 +171,7 @@ public class EarthquakeCityMap extends PApplet {
 		//earthquakesURL = "test2.atom";
 		
 		// Uncomment this line to take the quiz
-		//earthquakesURL = "quiz2.atom";
+		earthquakesURL = "quiz2.atom";
 		
 		
 		// (2) Reading in earthquake data and geometric properties
@@ -439,9 +439,9 @@ public class EarthquakeCityMap extends PApplet {
 		fill(color(0,0,0));
 		textAlign(LEFT, CENTER);
 		ybase+=275;
-		text("Stadistics", xbase+40 , ybase);
+		text("Statistics", xbase+40 , ybase);
 		
-		text("* Total Earthquakes: "+this.getTotalEarthQuakes(), xbase+10, ybase+20);
+		text("Total Earthquakes: "+this.getTotalEarthQuakes(), xbase+10, ybase+20);
 		text("* Land: "+this.getTotalLand(), xbase+10, ybase+40);
 		text("* Ocean: "+this.getTotalOcean() , xbase+10, ybase+60);
 		
