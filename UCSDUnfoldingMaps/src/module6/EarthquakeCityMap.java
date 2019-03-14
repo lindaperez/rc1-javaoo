@@ -2,6 +2,8 @@ package module6;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
@@ -17,6 +19,9 @@ import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
 import processing.core.PApplet;
+
+import javax.swing.*;
+
 
 /** EarthquakeCityMap
  * An application with an interactive map displaying earthquake data.
@@ -64,6 +69,87 @@ public class EarthquakeCityMap extends PApplet {
 	// NEW IN MODULE 5
 	private CommonMarker lastSelected;
 	private CommonMarker lastClicked;
+	public int getTotalEarthQuakes() {
+		return totalEarthQuakes;
+	}
+
+
+	public void setTotalEarthQuakes(int totalEarthQuakes) {
+		this.totalEarthQuakes = totalEarthQuakes;
+	}
+
+
+	public int getTotalLand() {
+		return totalLand;
+	}
+
+
+	public void setTotalLand(int totalLand) {
+		this.totalLand = totalLand;
+	}
+
+
+	public int getTotalOcean() {
+		return totalOcean;
+	}
+
+
+	public void setTotalOcean(int totalOcean) {
+		this.totalOcean = totalOcean;
+	}
+
+
+	public EarthquakeMarker getMayorMagnitude() {
+		return mayorMagnitude;
+	}
+
+
+	public void setMayorMagnitude(EarthquakeMarker mayorMagnitude) {
+		this.mayorMagnitude = mayorMagnitude;
+	}
+
+
+	public EarthquakeMarker getMayorDepth() {
+		return mayorDepth;
+	}
+
+
+	public void setMayorDepth(EarthquakeMarker mayorDepth) {
+		this.mayorDepth = mayorDepth;
+	}
+
+
+	public EarthquakeMarker getMayorRadius() {
+		return mayorRadius;
+	}
+
+
+	public void setMayorRadius(EarthquakeMarker mayorRadius) {
+		this.mayorRadius = mayorRadius;
+	}
+
+	public void setMayorDepthRadius(){
+		float dep=0, maxdep=0, radious=0, maxRadious=0;
+		for(Marker m :quakeMarkers){
+			dep = ((EarthquakeMarker)m).getDepth();
+			radious = ((EarthquakeMarker)m).getRadius();
+			if(dep>maxdep ){
+				maxdep = dep;
+				this.mayorDepth= (EarthquakeMarker)m;
+			}
+			if(radious>maxRadious){
+				maxRadious =radious;
+				this.mayorRadius = (EarthquakeMarker)m;
+			}
+		}
+	}
+
+	private int totalEarthQuakes;
+	private int totalLand;
+	private int totalOcean;
+	private EarthquakeMarker mayorMagnitude;
+	private EarthquakeMarker mayorDepth;
+	private EarthquakeMarker mayorRadius;
 	
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
@@ -108,13 +194,15 @@ public class EarthquakeCityMap extends PApplet {
 		  //check if LandQuake
 		  if(isLand(feature)) {
 		    quakeMarkers.add(new LandQuakeMarker(feature));
+		    this.totalLand++;
 		  }
 		  // OceanQuakes
 		  else {
 		    quakeMarkers.add(new OceanQuakeMarker(feature));
+		    this.totalOcean++;
 		  }
 	    }
-
+	    
 	    // could be used for debugging
 	    printQuakes();
 	 		
@@ -124,7 +212,10 @@ public class EarthquakeCityMap extends PApplet {
 	    map.addMarkers(quakeMarkers);
 	    map.addMarkers(cityMarkers);
 	    
-	    
+        this.sortAndPrint(20);
+		this.setTotalEarthQuakes(this.totalLand+this.totalOcean);
+		this.setMayorDepthRadius();
+		
 	}  // End setup
 	
 	
@@ -137,7 +228,20 @@ public class EarthquakeCityMap extends PApplet {
 	
 	
 	// TODO: Add the method:
-	//   private void sortAndPrint(int numToPrint)
+	   private void sortAndPrint(int numToPrint){
+		   //load earthquakes 
+		   System.out.println(numToPrint);
+		quakeMarkers.sort(null);
+		this.setMayorMagnitude((EarthquakeMarker)quakeMarkers.get(0));
+		int i=0;
+		for(Marker m:quakeMarkers){
+			if(i++<numToPrint){
+			System.out.println(m);
+			}else{
+				return;
+			}
+		}
+	   }
 	// and then call that method from setUp
 	
 	/** Event handler that gets called automatically when the 
@@ -270,7 +374,7 @@ public class EarthquakeCityMap extends PApplet {
 		int xbase = 25;
 		int ybase = 50;
 		
-		rect(xbase, ybase, 150, 250);
+		rect(xbase, ybase, 160, 250);
 		
 		fill(0);
 		textAlign(LEFT, CENTER);
@@ -322,8 +426,48 @@ public class EarthquakeCityMap extends PApplet {
 		strokeWeight(2);
 		line(centerx-8, centery-8, centerx+8, centery+8);
 		line(centerx-8, centery+8, centerx+8, centery-8);
+		//Search PAnnel
+		fill(255, 250, 240);
+		rect(xbase, ybase+250, 160, 350);
+		//Button
+		fill(218);
+		stroke(141);;
+
+		fill(color(255, 255, 255));
+		
+
+		fill(color(0,0,0));
+		textAlign(LEFT, CENTER);
+		ybase+=275;
+		text("Stadistics", xbase+40 , ybase);
+		
+		text("* Total Earthquakes: "+this.getTotalEarthQuakes(), xbase+10, ybase+20);
+		text("* Land: "+this.getTotalLand(), xbase+10, ybase+40);
+		text("* Ocean: "+this.getTotalOcean() , xbase+10, ybase+60);
+		
+		text("Max Magnitude: "+this.getMayorMagnitude().getMagnitude(), xbase+10, ybase+100);
+		String[] em= this.getMayorMagnitude().toString().split("of");
+		
+		text(""+em[0], xbase+15, ybase+120);
+		text(""+((em.length>1)?trim(em[1])+"":""), xbase+15, ybase+140);
 		
 		
+		//CityMarker cmm = new CityMarker(this.getMayorMagnitude().getLocation());
+		//text(""+cmm.getCity()+", "+cmm.getCountry(), xbase+15, ybase+120);
+		
+		text("Max Depth: "+this.getMayorDepth().getDepth(), xbase+10, ybase+180);
+		String[] ed= this.getMayorDepth().toString().split("of");
+		
+		text(""+ed[0], xbase+15, ybase+200);
+		
+		text(""+((ed.length>1)?trim(ed[1])+"":""), xbase+15, ybase+220);
+		
+		text("Max Radius: "+this.getMayorRadius().getRadius(), xbase+10, ybase+260);
+	    String[] er= this.getMayorRadius().toString().split("of");
+		
+		text(""+er[0], xbase+15, ybase+280);
+		text(""+((er.length>1)?trim(er[1])+"":""), xbase+15, ybase+300);
+	
 	}
 
 	
@@ -372,6 +516,7 @@ public class EarthquakeCityMap extends PApplet {
 			}
 		}
 		System.out.println("OCEAN QUAKES: " + totalWaterQuakes);
+
 	}
 	
 	

@@ -10,7 +10,7 @@ import processing.core.PGraphics;
  *
  */
 // TODO: Implement the comparable interface
-public abstract class EarthquakeMarker extends CommonMarker
+public abstract class EarthquakeMarker extends CommonMarker implements Comparable<EarthquakeMarker>
 {
 	
 	// Did the earthquake occur on land?  This will be set by the subclasses.
@@ -56,8 +56,22 @@ public abstract class EarthquakeMarker extends CommonMarker
 	}
 	
 	// TODO: Add the method:
-	// public int compareTo(EarthquakeMarker marker)
-	
+	public int compareTo(EarthquakeMarker marker){
+
+			if(marker ==null){
+				throw new NullPointerException("Comparable Marker Object cannot be null");
+			}
+		float mA = this.getMagnitude();
+		float mM = marker.getMagnitude();
+		if(mM>mA){
+			return 1;
+		}else if(mM ==mA){
+			return 0;
+		}else{
+			return -1;
+		}	
+	}
+
 	
 	// calls abstract method drawEarthquake and then checks age and draws X if needed
 	@Override
@@ -66,6 +80,8 @@ public abstract class EarthquakeMarker extends CommonMarker
 		pg.pushStyle();
 			
 		// determine color of marker from depth
+	
+	  
 		colorDetermine(pg);
 		
 		// call abstract method implemented in child class to draw marker shape
@@ -73,6 +89,7 @@ public abstract class EarthquakeMarker extends CommonMarker
 		
 		// IMPLEMENT: add X over marker if within past day		
 		String age = getStringProperty("age");
+		
 		if ("Past Hour".equals(age) || "Past Day".equals(age)) {
 			
 			pg.strokeWeight(2);
