@@ -1,6 +1,16 @@
 # rc1-javaoo
 Repository Course I from 5 - Package developed for Object Oriented Programming in Java Specialization - Coursera
 
+Hi there,
+
+Download
+#Run as an Applet with Java 8
+
+Implemented:
+- Module6
+- MyContribution
+
+
 First Week Achievements 
 
 Explain why classes and objects are useful in programming
